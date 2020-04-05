@@ -1,3 +1,6 @@
+This is a fork made to run on ubuntu using the driver from https://github.com/SheIITear/waifu2x-api-golang.
+Requires python 3.8.2 to work.
+
 # Video2X Lossless Video Enlarger
 
 ### Official Discussion Group (Telegram): https://t.me/video2x
