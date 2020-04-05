@@ -1,6 +1,6 @@
 ---
 waifu2x_caffe:
-  path: C:\Users\K4YT3X\AppData\Local\video2x\waifu2x-caffe\waifu2x-caffe-cui
+  path:
   input_extention_list:
   output_extention:
   mode: noise_scale
@@ -38,7 +38,7 @@ waifu2x_converter:
   output:
   input:
 waifu2x_ncnn_vulkan:
-  path: C:\Users\K4YT3X\AppData\Local\video2x\waifu2x-ncnn-vulkan\waifu2x-ncnn-vulkan
+  path: 
   v:
   i:
   o:
@@ -49,10 +49,10 @@ waifu2x_ncnn_vulkan:
   g: 0
   j: "1:2:2"
 anime4k:
-  path: C:\Users\K4YT3X\AppData\Local\video2x\anime4k\Anime4K.jar
-  java_path: C:\Program Files\Java\jdk-12.0.2\bin\java.exe
+  path:
+  java_path:
 ffmpeg:
-  ffmpeg_path: /usr/local/bin/
+  ffmpeg_path: /usr/bin/
   video_to_frames:
     output_options:
       "-qscale:v":
@@ -63,7 +63,7 @@ ffmpeg:
     input_options:
       "-qscale:v":
       "-qscale:a":
-      "-f": mjpeg
+      "-f": image2
     output_options:
       "-vcodec": libx264
       "-crf": 17
@@ -84,6 +84,6 @@ ffmpeg:
     "-hwaccel": auto
     "-y": true
 video2x:
-  video2x_cache_directory: /home/shelltear/cachevideo2x/
+  video2x_cache_directory: $HOME/cachevideo2x/
   image_format: png
   preserve_frames: false
