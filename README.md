@@ -1,7 +1,7 @@
 This is a fork made to run on ubuntu using the driver from https://github.com/SheIITear/waifu2x-api-golang.
 Requires python 3.8.2 to work.
 
-To run install requirements using pip from requirements.txt in src folder.
+To run, install requirements using pip from requirements.txt in src folder and the driver.
 Then run:
 > python video2x.py -i sample_input.mp4 -o sample_output.mp4 -m cpu -r 2 -d waifu2x_converter
 
