@@ -60,7 +60,7 @@ class Waifu2xConverter:
 
         # list to be executed
         # initialize the list with waifu2x binary path as the first element
-        execute = [str(pathlib.Path(self.driver_settings['path']) / 'waifu2x-converter-cpp.exe')]
+        execute = [str(pathlib.Path(self.driver_settings['path']) / 'waifu2x-converter-cpp')]
 
         for key in self.driver_settings.keys():
 
