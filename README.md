@@ -1,79 +1,198 @@
-This is a fork made to run on ubuntu using the driver from https://github.com/SheIITear/waifu2x-api-golang.
-Requires python 3.8.2 to work.
+<p align="center">
+   <img src="https://user-images.githubusercontent.com/21986859/81626588-ae5ab800-93eb-11ea-918f-ebe98c2de40a.png"/>
+</p>
 
-To run, install requirements using pip from requirements.txt in src folder and the driver.
-Then run:
-> python video2x.py -i sample_input.mp4 -o sample_output.mp4 -m cpu -r 2 -d waifu2x_converter
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/k4yt3x/video2x?style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/k4yt3x/video2x/Video2X%20Nightly%20Build?label=Nightly&style=flat-square)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/k4yt3x/video2x?style=flat-square)
+![GitHub All Releases](https://img.shields.io/github/downloads/k4yt3x/video2x/total?style=flat-square)
+![GitHub](https://img.shields.io/github/license/k4yt3x/video2x?style=flat-square)
+![Platforms](https://img.shields.io/badge/Platforms-Windows%20%7C%20Linux%20%7C%20macOS-blue?style=flat-square)
+![Become A Patron!](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.herokuapp.com%2Fk4yt3x&style=flat-square)
 
-# Video2X Lossless Video Enlarger
+<!--# Video2X Lossless Video Enlarger-->
 
 ### Official Discussion Group (Telegram): https://t.me/video2x
 
-## Download Builds (Windows)
+## [Download Stable/Beta Builds](https://github.com/k4yt3x/video2x/releases/latest) (Windows)
 
-You can go to the [releases page](https://github.com/k4yt3x/video2x/releases) to download the latest builds of `Video2X`. The exe files will require no Python or Python module installation.
+- **`Full`**: full package comes pre-configured with **all** dependencies like `FFmpeg` and `waifu2x-caffe`.
+- **`Light`**: ligt package comes with only Video2X binaries and a template configuration file. The user will either have to run the setup script or install and configure dependencies themselves.
 
-The **`full`** package provides all packages that will possibly be needed by `Video2X`, including `FFmpeg`, `waifu2x-caffe`, `waifu2x-converter-cpp`, `waifu2x-ncnn-vulkan`, and `Anime4K`. The config file (`video2x.json`) is also already configured for the environment. All you need to do is just to launch `video2x.exe`.
+Go to the **[Quick Start](#quick-start)** section for usages.
 
-The **`light`** package provides only the most basic functions of `Video2X`. Only `video2x.exe`, `video2x_setup.exe` and `video2x.json` are included. To setup dependencies (e.g. `FFmpeg` and `Waifu2X`) automatically, simply launch `video2x_setup.exe`.
+### [Download From Mirror](https://files.k4yt3x.com/Projects/Video2X/latest)
 
-## Prerequisites
+In case you're unable to download the releases directly from GitHub, you can try downloading from the mirror site hosted by the author. Only releases will be updated in this directory, not nightly builds.
 
-Component names that are **bolded** can be automatically downloaded and configured with the `video2x_setup.py` script.
+## [Download Nightly Builds](https://github.com/k4yt3x/video2x/actions) (Windows)
 
-1. Operating System: Windows / Linux
-2. AMD GPU / Nvidia GPU
-3. AMD GPU driver / Nvidia GPU driver / Nvidia CUDNN
-4. [**FFmpeg**](https://ffmpeg.zeranoe.com/builds/)
-5. One of the following drivers
-   - [**waifu2x-caffe**](https://github.com/lltcggie/waifu2x-caffe/releases)
-   - [**waifu2x-converter-cpp**](https://github.com/DeadSix27/waifu2x-converter-cpp/releases)
-   - [**waifu2x-ncnn-vulkan**](https://github.com/nihui/waifu2x-ncnn-vulkan)
-   - [**Anime4K**](https://github.com/bloc97/Anime4K)
+**You need to be logged into GitHub to be able to download GitHub Actions artifacts.**
 
-## Recent Changes
+Nightly builds are built automatically every time a new commit is pushed to the master branch. The lates nightly build is always up-to-date with the latest version of the code, but is less stable and may contain bugs. Nightly builds are handled by GitHub's integrated CI/CD tool, GitHub Actions.
 
-### 3.1.0 (February 26, 2020)
+To download the latest nightly build, go to the [GitHub Actions](https://github.com/k4yt3x/video2x/actions) tab, enter the last run of workflow "Video2X Nightly Build, and download the artifacts generated from the run.
 
-- Removed the redundant layer of multi-threading since multi-process has to be implemented for launching Windows PE files in sub-processes
-- Added support for graceful exit upon `KeyboardInterrupt` or termination signals
-- Other minor improvements such as replacing `' '.join(execute)` with `shlex.join(execute)`
+## [Docker Image](https://hub.docker.com/r/k4yt3x/video2x)
 
-### 3.0.0 (November 26, 2019)
+Video2X Docker images are available on Docker Hub for easy and rapid Video2X deployment on Linux and macOS. If you already have Docker installed, then only one command is needed to start upscaling a video. For more information on how to use Video2X's Docker image, please refer to the [documentations](https://github.com/K4YT3X/video2x/wiki/Docker).
 
-- Linux compatibility
-- Configuration file changed to YAML format
-  - You may still use a JSON-formatted config file. To do so, please specify `-c video2x.json`.
-- Other code clean-up and optimization
+## Introduction
 
-### 2.10.0 (August 16, 2019)
+Video2X is a video/GIF/image upscaling software based on Waifu2X, Anime4K, SRMD and RealSR written in Python 3. It upscales videos, GIFs and images, restoring details from low-resolution inputs. Video2X also accepts GIF input to video output and video input to GIF output.
 
-- **Added support for [Anime4K](https://github.com/bloc97/Anime4K)**
+Currently, Video2X supports the following drivers (implementations of algorithms).
 
-### Setup Script 1.6.0 (November 26, 2019)
+- **Waifu2X Caffe**: Caffe implementation of waifu2x
+- **Waifu2X Converter CPP**: CPP implementation of waifu2x based on OpenCL and OpenCV
+- **Waifu2X NCNN Vulkan**: NCNN implementation of waifu2x based on Vulkan API
+- **SRMD NCNN Vulkan**: NCNN implementation of SRMD based on Vulkan API
+- **RealSR NCNN Vulkan**: NCNN implementation of RealSR based on Vulkan API
+- **Anime4KCPP**: CPP implementation of Anime4K
 
-- Added compatibility for new YAML configuration file
-- Added better exception handling
+### Video Upscaling
 
-## Description
+![Spirited Away Demo](https://user-images.githubusercontent.com/21986859/49412428-65083280-f73a-11e8-8237-bb34158a545e.png)\
+*Upscale Comparison Demonstration*
 
-Video2X is an automation software based on waifu2x image enlarging engine. It extracts frames from a video, enlarge it by a number of times without losing any details or quality, keeping lines smooth and edges sharp.
-
-For short: **Video2X enlarges your video without losing details**
-
-Watch for the sharper edges in this screenshot around the shadows:
-
-![preview](https://user-images.githubusercontent.com/21986859/49412428-65083280-f73a-11e8-8237-bb34158a545e.png)
-
-**You can also watch the YouTube video Demo: https://www.youtube.com/watch?v=PG94iPoeoZk**
+**You can watch the whole demo video on YouTube: https://youtu.be/mGEfasQl2Zo**
 
 Clip is from trailer of animated movie "千と千尋の神隠し". Copyright belongs to "株式会社スタジオジブリ (STUDIO GHIBLI INC.)". Will delete immediately if use of clip is in violation of copyright.
 
-## Screenshot
+### GIF Upscaling
 
-![video2x_gui](https://user-images.githubusercontent.com/21986859/63219691-ee478400-c166-11e9-8c15-dcf59228bd96.png)
+This original input GIF is 160x120 in size. This image is downsized and accelerated to 20 FPS from its [original image](https://gfycat.com/craftyeasygoingankole-capoo-bug-cat).
 
-![screenshot](https://user-images.githubusercontent.com/21986859/40265170-39c0caae-5b01-11e8-8371-8b6c24769639.png)
+![catfru](https://user-images.githubusercontent.com/21986859/81631069-96d4fc80-93f6-11ea-92fb-33d6545055e7.gif)\
+*Catfru original 160x120 GIF image*
+
+Below is what it looks like after getting upscaled to 640x480 (4x) using Video2X.
+
+![catfru4x](https://user-images.githubusercontent.com/21986859/81631070-976d9300-93f6-11ea-9137-072a3b386110.gif)\
+*Catfru 4x upscaled GIF*
+
+### Image Upscaling
+
+![jill_comparison](https://user-images.githubusercontent.com/21986859/81631903-79a12d80-93f8-11ea-9c3c-f340240cf08c.png)\
+*Image upscaling example*
+
+[Original image](https://72915.tumblr.com/post/173793265673) from [nananicu@twitter](https://twitter.com/nananicu/status/994546266968281088), edited by K4YT3X.
+
+## All Demo Videos
+
+Below is a list of all the demo videos available.
+The list is sorted from new to old.
+
+- **Bad Apple!!**
+  - YouTube: https://youtu.be/-RKLdCELgkQ
+  - Bilibili: https://www.bilibili.com/video/BV1s5411s7xV/
+- **The Pet Girl of Sakurasou 240P to 1080P 60FPS**
+  - Original name: さくら荘のペットな彼女
+  - YouTube: https://youtu.be/M0vDI1HH2_Y
+  - Bilibili: https://www.bilibili.com/video/BV14k4y167KP/
+- **Spirited Away (360P to 4K)**
+  - Original name: 千と千尋の神隠し
+  - YouTube: https://youtu.be/mGEfasQl2Zo
+  - Bilibili: https://www.bilibili.com/video/BV1V5411471i/
+
+---
+
+## Screenshots
+
+### Video2X GUI
+
+![GUI Preview](https://user-images.githubusercontent.com/21986859/82119295-bc526500-976c-11ea-9ea8-53264689023e.png)\
+*Video2X GUI Screenshot*
+
+### Video2X CLI
+
+![Video2X CLI Screenshot](https://user-images.githubusercontent.com/21986859/81662415-0c5bbf80-942d-11ea-8aa6-aacf813f9368.png)\
+*Video2X CLI Screenshot*
+
+---
+
+### Sample Videos
+
+If you can't find a video clip to begin with, or if you want to see a before-after comparison, we have prepared some sample clips for you. The quick start guide down below will also be based on the name of the sample clips.
+
+![sample_video](https://user-images.githubusercontent.com/21986859/52905766-d5512b00-3236-11e9-9aea-077636539679.png)\
+*Sample Upscale Videos*
+
+- [Sample Video (240P) 4.54MB](https://files.k4yt3x.com/Resources/Videos/sample_input.mp4)
+- [Sample Video Upscaled (1080P) 4.54MB](https://files.k4yt3x.com/Resources/Videos/sample_output.mp4)
+- [Sample Video Original (1080P) 22.2MB](https://files.k4yt3x.com/Resources/Videos/sample_original.mp4)
+
+Clip is from anime "さくら荘のペットな彼女". Copyright belongs to "株式会社アニプレックス (Aniplex Inc.)". Will delete immediately if use of clip is in violation of copyright.
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+Before running Video2X, you'll need to ensure you have installed the drivers' external dependencies such as GPU drivers.
+
+- waifu2x-caffe
+  - GPU mode: Nvidia graphics card driver
+  - cuDNN mode: Nvidia CUDA and [cuDNN](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#install-windows)
+- Other Drivers
+  - GPU driver if you want to use GPU for processing
+
+### Running Video2X (GUI)
+
+The easiest way to run Video2X is to use the full build. Extract the full release zip file and you'll get these files.
+
+![Video2X Release Files](https://user-images.githubusercontent.com/21986859/81489846-28633380-926a-11ea-9e81-fb92f492e14c.png)\
+*Video2X release files*
+
+Simply double click on video2x_gui.exe to launch the GUI.
+
+![Video2X GUI Main Tab](https://user-images.githubusercontent.com/21986859/81489858-4c267980-926a-11ea-9ab2-38ec738f2fb6.png)\
+*Video2X GUI main tab*
+
+Then, drag the videos you wish to upscale into the window and select the appropriate output path.
+
+![drag-drop](https://user-images.githubusercontent.com/21986859/81489880-7bd58180-926a-11ea-85ae-b72d2f4f5e72.png)\
+*Drag and drop file into Video2X GUI*
+
+Tweak the settings if you want to, then hit the start button at the bottom and the upscale will start. Now you'll just have to wait for it to complete.
+
+![upscale-started](https://user-images.githubusercontent.com/21986859/81489924-ce16a280-926a-11ea-831c-6c66b950f957.png)\
+*Video2X started processing input files*
+
+### Running Video2X (CLI)
+
+#### Basic Upscale Example
+
+This example command below uses `waifu2x-caffe` to enlarge the video `sample-input.mp4` two double its original size.
+
+```shell
+python video2x.py -i sample-input.mp4 -o sample-output.mp4 -r 2 -d waifu2x_caffe
+```
+
+#### Advanced Upscale Example
+
+If you would like to tweak engine-specific settings, either specify the corresponding argument after `--`, or edit the corresponding field in the configuration file `video2x.yaml`. **Command line arguments will overwrite default values in the config file.**
+
+This example below adds enables TTA for `waifu2x-caffe`.
+
+```shell
+python video2x.py -i sample-input.mp4 -o sample-output.mp4 -r 2 -d waifu2x_caffe -- --tta 1
+```
+
+To see a help page for driver-specific settings, use `-d` to select the driver and append `-- --help` as demonstrated below. This will print all driver-specific settings and descriptions.
+
+```shell
+python video2x.py -d waifu2x_caffe -- --help
+```
+
+### Running Video2X (Docker)
+
+Video2X can be deployed via Docker. The following command upscales the video `sample_input.mp4` two times with Waifu2X NCNN Vulkan and outputs the upscaled video to `sample_output.mp4`. For more details on Video2X Docker image usages, please refer to the [documentations](https://github.com/K4YT3X/video2x/wiki/Docker).
+
+```shell
+docker run --rm -it --gpus all -v /dev/dri:/dev/dri -v $PWD:/host k4yt3x/video2x:4.6.0 -d waifu2x_ncnn_vulkan -r 2 -i sample_input.mp4 -o sample_output.mp4
+```
 
 ---
 
@@ -85,166 +204,73 @@ You can find all detailed user-facing and developer-facing documentations in the
 
 ### [Step-By-Step Tutorial](https://github.com/k4yt3x/video2x/wiki/Step-By-Step-Tutorial)
 
-For those who want a detailed walk-through of how to use `Video2X`, you can head to the [Step-By-Step Tutorial](https://github.com/k4yt3x/video2x/wiki/Step-By-Step-Tutorial) wiki page. It includes almost every step you need to perform in order to enlarge your first video.
+For those who want a detailed walk-through of how to use Video2X, you can head to the [Step-By-Step Tutorial](https://github.com/k4yt3x/video2x/wiki/Step-By-Step-Tutorial) wiki page. It includes almost every step you need to perform in order to enlarge your first video.
 
-### [Waifu2X Drivers](https://github.com/k4yt3x/video2x/wiki/Waifu2X-Drivers)
+### [Run From Source Code](https://github.com/k4yt3x/video2x/wiki/Run-From-Source-Code)
 
-Go to the [Waifu2X Drivers](https://github.com/k4yt3x/video2x/wiki/Waifu2X-Drivers) wiki page if you want to see a detailed description on the different types of `waifu2x` drivers implemented by `Video2X`. This wiki page contains detailed difference between different drivers, and how to download and set each of them up for `Video2X`.
+This wiki page contains all instructions for how you can run Video2X directly from Python source code.
+
+### [Drivers](https://github.com/k4yt3x/video2x/wiki/Drivers)
+
+Go to the [Drivers](https://github.com/k4yt3x/video2x/wiki/Drivers) wiki page if you want to see a detailed description on the different types of drivers implemented by Video2X. This wiki page contains detailed difference between different drivers, and how to download and set each of them up for Video2X.
 
 ### [Q&A](https://github.com/k4yt3x/video2x/wiki/Q&A)
 
-If you have any questions, first try visiting our [Q&A](https://github.com/k4yt3x/video2x/wiki/Q&A) page to see if your question is answered there. If not, open an issue and we will respond to your questions ASAP.
+If you have any questions, first try visiting our [Q&A](https://github.com/k4yt3x/video2x/wiki/Q&A) page to see if your question is answered there. If not, open an issue and we will respond to your questions ASAP. Alternatively, you can also join our [Telegram discussion group](https://t.me/video2x) and ask your questions there.
 
----
+### [History](https://github.com/k4yt3x/video2x/wiki/History)
 
-## Quick Start
-
-### Prerequisites
-
-- **Python 3.8**
-Download: https://www.python.org/downloads/windows/
-- **FFmpeg Windows Build**
-Download: https://ffmpeg.org/download.html
-- **waifu2x-caffe** (for Nvidia CUDA/CUDNN)
-Download: https://github.com/lltcggie/waifu2x-caffe/releases
-- **waifu2x-converter-cpp** (required for AMD, OpenCL and OpenGL processing)
-Download: https://github.com/DeadSix27/waifu2x-converter-cpp/releases
-- **waifu2x-ncnn-vulkan**
-Download: https://github.com/nihui/waifu2x-ncnn-vulkan/releases
-- **Anime4K**
-Download: https://github.com/bloc97/Anime4K/releases
-
-### Installing Dependencies
-
-First, clone the video2x repository.
-
-```shell
-git clone https://github.com/k4yt3x/video2x.git
-cd video2x/bin
-```
-
-Then you may run the `video2x_setup.py` script to install and configure the dependencies automatically. This script is designed and tested on Windows 10.
-
-This script will install the newest version of `ffmpeg`, any one or all `waifu2x-caffe`, `waifu2x-converter-cpp`, and `waifu2x-ncnn-vulkan` to `%LOCALAPPDATA%\\video2x` and all required python libraries.
-
-```shell
-python video2x_setup.py
-```
-
-Alternatively, you can also install the dependencies manually. Please refer to the prerequisites section to see what's needed.
-
-Then you'll need to install python dependencies before start using video2x. Install simply by executing the following command.
-
-```shell
-pip install -r requirements.txt
-```
-
-**Note that all command line arguments/options overwrite configuration file settings.**
-
-### Sample Videos
-
-If you can't find a video clip to begin with, or if you want to see a before-after comparison, we have prepared some sample clips for you. The quick start guide down below will also be based on the name of the sample clips.
-
-![sample_video](https://user-images.githubusercontent.com/21986859/52905766-d5512b00-3236-11e9-9aea-077636539679.png)
-
-- [Sample Video Original (240P) 1.7MB](https://files.flexio.org/Resources/Videos/sample_input.mp4)
-- [Sample Video Upscaled (1080P) 4.8MB](https://files.flexio.org/Resources/Videos/sample_output.mp4)
-
-Clip is from anime "さくら荘のペットな彼女". Copyright belongs to "株式会社アニプレックス (Aniplex Inc.)". Will delete immediately if use of clip is in violation of copyright.
-
-### Nvidia CUDA (waifu2x-caffe)
-
-Enlarge the video to 1920x1080 using CUDA. You may also use the `-r/--ratio` option.
-
-```shell
-python video2x.py -i sample_input.mp4 -o sample_output.mp4 -m gpu --width=1920 --height=1080
-```
-
-### Nvidia CUDNN
-
-Enlarge the video to 1920x1080 using CUDNN. You may also use the `-r/--ratio` option.
-
-```shell
-python video2x.py -i sample_input.mp4 -o sample_output.mp4 -m cudnn --width=1920 --height=1080
-```
-
-### AMD or Nvidia (waifu2x-converter-cpp OpenCL)
-
-Enlarge the video by 2 times using OpenCL. Note that `waifu2x-converter-cpp` doesn't support width and height. You'll also have to explicitly specify that the driver to be used is `waifu2x_converter`.
-
-```shell
-python video2x.py -i sample_input.mp4 -o sample_output.mp4 -m gpu -r 2 -d waifu2x_converter
-```
-
-### AMD or Nvidia (waifu2x-ncnn-vulkan Vulkan)
-
-```shell
-python video2x.py -i sample_input.mp4 -o sample_output.mp4 -m gpu -r 2 -d waifu2x_ncnn_vulkan
-```
-
-### Anime4K
-
-Enlarge the video by 2 times using Anime4K. **Remember to install and configure [JRE 12](https://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase12-5440181.html) path in the configuration file.**
-
-```shell
-python video2x.py -i sample_input.mp4 -o sample_output.mp4 -r 2 -d anime4k
-```
-
-### CPU
-
-Enlarge the video to 1920x1080 using the CPU. You may also use the `-r/--ratio` option. **waifu2x-based upscalers potentially run much slower than using a GPU, but Anime4K is more CPU-dependant**. The configuration file for this method is similar to the previous methods.
-
-```shell
-python video2x.py -i sample_input.mp4 -o sample_output.mp4 -m cpu --width=1920 --height=1080
-```
+Are you interested in how the idea of Video2X was born? Do you want to know the stories and histories behind Video2X's development? Come into this page.
 
 ---
 
 # Full Usage
 
-## General Options
+## Video2X Options
 
 ### -h, --help
     show this help message and exit
 
-## File Options
-
 ### -i INPUT, --input INPUT
-    Source video file/directory (default: None)
+    source video file/directory
 
 ### -o OUTPUT, --output OUTPUT
-    Output video file/directory (default: None)
+    output video file/directory
+
+### -c CONFIG, --config CONFIG
+    video2x config file path
+
+### --log LOG
+    log file path (default: program_directory\video2x_%Y-%m-%d_%H-%M-%S.log)
+
+### --disable_logging
+    disable logging (default: False)
+
+### -v, --version
+    display version, lawful information and exit
 
 ## Upscaling Options
 
-### -m {cpu,gpu,cudnn}, --method {cpu,gpu,cudnn}
-    Upscaling method (default: gpu)
+### -d DRIVER, --driver DRIVER
+    upscaling driver (default: waifu2x_caffe)
 
-### -d {waifu2x_caffe,waifu2x_converter}, --driver {waifu2x_caffe,waifu2x_converter}
-    Waifu2x driver (default: waifu2x_caffe)
+Available options are:
 
-### -y MODEL_DIR, --model_dir MODEL_DIR
-    Folder containing model JSON files
-
-### -t THREADS, --threads THREADS
-    Number of threads to use for upscaling (default: 5)
-
-### -c CONFIG, --config CONFIG
-    Video2X config file location (default: video2x\bin\video2x.json)
-
-### -b, --batch
-    Enable batch mode (select all default values to questions)
-
-## Scaling Options
-
-### --width WIDTH
-    Output video width
-
-### --height HEIGHT
-    Output video height
+- waifu2x_caffe
+- waifu2x_converter_cpp
+- waifu2x_ncnn_vulkan
+- srmd_ncnn_vulkan
+- realsr_ncnn_vulkan
+- anime4kcpp
 
 ### -r RATIO, --ratio RATIO
-    Scaling ratio
+    scaling ratio
+
+### -p PROCESSES, --processes PROCESSES
+    number of processes to use for upscaling (default: 1)
+
+### --preserve_frames
+    preserve extracted and upscaled frames (default: False)
 
 ---
 
@@ -261,19 +287,26 @@ https://www.gnu.org/licenses/gpl-3.0.txt
 
 This project relies on the following software and projects.
 
-- [FFmpeg]('https://www.ffmpeg.org/')
+- [FFmpeg](https://www.ffmpeg.org/)
 - [waifu2x-caffe](https://github.com/lltcggie/waifu2x-caffe)
 - [waifu2x-converter-cpp](https://github.com/DeadSix27/waifu2x-converter-cpp)
 - [waifu2x-ncnn-vulkan](https://github.com/nihui/waifu2x-ncnn-vulkan)
+- [srmd-ncnn-vulkan](https://github.com/nihui/srmd-ncnn-vulkan)
+- [realsr-ncnn-vulkan](https://github.com/nihui/realsr-ncnn-vulkan)
 - [Anime4K](https://github.com/bloc97/Anime4K)
+- [Anime4KCPP](https://github.com/TianZerL/Anime4KCPP)
+- [Gifski](https://github.com/ImageOptim/gifski)
 
 ## Special Thanks
 
-Appreciations given to the following code contributors:
+Appreciations given to the following personnel who have contributed significantly to the project (specifically the technical perspective).
 
-- @BrianPetkovsek
-- @SAT3LL
+- [@BrianPetkovsek](https://github.com/BrianPetkovsek)
+- [@sat3ll](https://github.com/sat3ll)
+- [@ddouglas87](https://github.com/ddouglas87)
+- [@lhanjian](https://github.com/lhanjian)
 
-## Related Resources
+## Related Projects
 
-- [Dandere2x](https://github.com/CardinalPanda/dandere2x): `Dandere2x` is a lossy video upscaler also built around `waifu2x`, but with video compression techniques to shorten the time needed to process a video.
+- [Dandere2x](https://github.com/CardinalPanda/dandere2x): A lossy video upscaler also built around `waifu2x`, but with video compression techniques to shorten the time needed to process a video.
+- [Waifu2x-Extension-GUI](https://github.com/AaronFeng753/Waifu2x-Extension-GUI): A similar project that focuses more and only on building a better graphical user interface. It is built using C++ and Qt5, and currently only supports the Windows platform.
